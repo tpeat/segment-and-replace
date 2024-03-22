@@ -160,6 +160,7 @@ dependencies:
     - jupyter-core==5.7.1
     - matplotlib-inline==0.1.6
     - nest-asyncio==1.6.0
+    - opencv-python==4.9.0.80
     - parso==0.8.3
     - pexpect==4.9.0
     - platformdirs==4.2.0
