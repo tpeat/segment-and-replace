@@ -26,7 +26,7 @@ Inspiriation:
 inpainting.ipynb 
  - A Test Jupyter Notebook that uses an out-of-the-box inpainting model to give us a reference for how our model should hopefully look
 
-#### /assets/
+### /assets/
  - A folder to contain all object files like images, environment ymls, etc. necessary to run the model
 
 /assets/Messi_Filtered
@@ -44,7 +44,7 @@ inpainting.ipynb
 /assets/sunglasses.png
  - A generic, copyright free png of sunglasses to help increase our dataset
 
-#### /data/
+### /data/
  - A folder containing all relevant Jupyter Notebook's for data pre-processing
 
 /data/DataAugment.ipynb
@@ -56,10 +56,10 @@ inpainting.ipynb
 /data/train_analysis.ipynb
  - A Jupyter notebook that is helping pre-process our image dataset for how the model expects the image filesnames
 
-#### /gen/
+### /gen/
  - A folder containing all relevant code for generating and visualizing images for our unsupervised learning method
 
-##### /gen/consistency_models
+#### /gen/consistency_models
  - A base model taken from [here](https://arxiv.org/abs/2303.01469) that we are focusing on Messi
 
 /gen/main.ipynb 
@@ -68,7 +68,7 @@ inpainting.ipynb
 /gen/viz_samples.ipynb
  - A Jupyter notebook to visualize samples generated as .npz
 
-#### /seg/
+### /seg/
  - A folder containing all relevant code for segmenting an image (our supervised learning method)
 
 /seg/hiera.py, /seg/hiera_mae.py, /seg/hiera_utils.py
