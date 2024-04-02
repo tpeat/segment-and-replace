@@ -19,6 +19,8 @@ from cm.train_util import CMTrainLoop
 import torch.distributed as dist
 import copy
 
+import os
+os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:256"
 
 def main():
     args = create_argparser().parse_args()
@@ -155,7 +157,7 @@ def create_argparser():
         microbatch=-1,  # -1 disables microbatches
         ema_rate="0.9999",  # comma-separated list of EMA values
         log_interval=10,
-        save_interval=5000,
+        save_interval=500,
         resume_checkpoint="",
         use_fp16=False,
         fp16_scale_growth=1e-3,
