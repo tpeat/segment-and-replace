@@ -92,6 +92,17 @@ example_h100_job.sh
 /seg/playground.ipynb
  - A Jupyter notebook for testing how a full model (Hiera) works and provides a baseline for our future implementation
 
+### /detect/
+
+/detect/dataset
+ - Where the MsCoCo dataset is downloaded and stored
+
+/detect/out_charts
+ - Where the output plots of Loss and Accuracy are stored during the training of the model
+
+/detect/detection.ipynb
+ - A Jupyter notebook for designing, creating, training, and testing of our Human Detection Model
+
 
 ## Env Setup
 
