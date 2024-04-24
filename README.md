@@ -95,7 +95,7 @@ example_h100_job.sh
 ### /detect/
 
 /detect/dataset
- - Where the MsCoCo dataset is downloaded and stored
+ - Where the MsCoCo dataset is downloaded and stored, including a script to download the dataset
 
 /detect/out_charts
  - Where the output plots of Loss and Accuracy are stored during the training of the model
