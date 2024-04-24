@@ -26,6 +26,9 @@ Inspiriation:
 inpainting.ipynb 
  - A Test Jupyter Notebook that uses an out-of-the-box inpainting model to give us a reference for how our model should hopefully look
 
+example_h100_job.sh
+ - A template for running a script on the H100's in PACE.
+
 ### /assets/
  - A folder to contain all object files like images, environment ymls, etc. necessary to run the model
 
@@ -47,6 +50,9 @@ inpainting.ipynb
 ### /data/
  - A folder containing all relevant Jupyter Notebook's for data pre-processing
 
+/data/clean.py
+ - A Python script to aid in cleaning up some parts of the Messi Dataset
+
 /data/DataAugment.ipynb
  - A Jupyter notebook for adding hats / sunglasses to pictures to increase the size of the dataset
 
@@ -62,6 +68,9 @@ inpainting.ipynb
 #### /gen/consistency_models
  - A base model taken from [here](https://arxiv.org/abs/2303.01469) that we are focusing on Messi
 
+/gen/consitency_model.ipynb 
+ - A Jupyter notebook for testing one a diffusion image generation model
+
 /gen/main.ipynb 
  - A Jupyter notebook that was for testing training the consistency_models on a pre-made dataset to learn more about consistency_models
 
@@ -74,11 +83,25 @@ inpainting.ipynb
 /seg/hiera.py, /seg/hiera_mae.py, /seg/hiera_utils.py
  - Python files taken from Hiera: A Hierarchical Vision Transformer without the Bells-and-Whistles by Meta (temporarily for testing)
 
+/seg/model.py
+ - A Python file to define and train our segmentation model. Includes a Dataloader, Model definition, and Training Loop
+
 /seg/decoder.py
  - An implementation of a Feature Pyramid Network decoder
 
 /seg/playground.ipynb
  - A Jupyter notebook for testing how a full model (Hiera) works and provides a baseline for our future implementation
+
+### /detect/
+
+/detect/dataset
+ - Where the MsCoCo dataset is downloaded and stored, including a script to download the dataset
+
+/detect/out_charts
+ - Where the output plots of Loss and Accuracy are stored during the training of the model
+
+/detect/detection.ipynb
+ - A Jupyter notebook for designing, creating, training, and testing of our Human Detection Model
 
 
 ## Env Setup
