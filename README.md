@@ -185,11 +185,53 @@ TODO:
 
 ## 04/02/2024
 
-<details><summary>Tristan - restarting trianing</summary>
+<details><summary>Tristan - restarting training</summary>
 
+Restarting training with a lower learning rate and higher batch size
 
-Training Details:
+lr=1e-4 and batch=128
 
+improved results, moving slower from imagenet to messi distribution, less transfixed on naive features like hair and blue/white
 
+</details>
+
+## 04/18/2024
+
+<details><summary>Tristan - training results with lower learning rate</summary>
+
+Seeing further results, training to around 18k iterations
+
+</details>
+
+## 04/20/2024
+
+<details><summary>Tristan - moving to H100</summary>
+
+Had major issues allocating 1 of the 4 A100's that pace has so switching to H100s
+
+New modules to load - not a 1to1 mapping so requires model rebuild
+```sh
+module load anaconda3
+module load gcc/12.3.0
+module load python/3.10.10
+module load cuda/12.1.1
+module load mvapich2/2.3.7-1 
+```
+Have to rebuild environment
+```sh
+pip install torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 --index-url https://download.pytorch.org/whl/cu121
+```
+
+Major issue is that now flash-attn is out of date with current version of pytorch, requires an update to the attention mechansims
+
+With torch=2.1.0, previously 2.0.1, we can use F.scaled_dot_product_attention and allocate a 
+
+</details>
+
+## 04/22/2024
+
+<details><summary>Tristan - memory errors all around</summary>
+
+running out of memory in my scratch dir, when I checkpoint too frequently 500 - 1k then I get all the checkpoints I want but run out of memory too quickly
 
 </details>
