@@ -290,7 +290,7 @@ class AttentionBlock(nn.Module):
         self.qkv = conv_nd(dims, channels, channels * 3, 1)
         self.attention_type = attention_type
         if attention_type == "flash":
-            self.attention = QKVFlashAttention(channels, self.num_heads)
+            self.attention = TristanAttention(channels, self.num_heads)
         else:
             # split heads before split qkv
             self.attention = QKVAttentionLegacy(self.num_heads)
@@ -514,6 +514,56 @@ class QKVAttention(nn.Module):
     @staticmethod
     def count_flops(model, _x, y):
         return count_flops_attn(model, _x, y)
+
+class TristanAttention(nn.Module):
+    """
+    Implementation of F.scaled_... for flasha ttention
+    using pytorch > 2.0, they have legacy version outdated for current cuda version
+
+    """
+    def __init__(
+        self,
+        embed_dim,
+        num_heads,
+        batch_first=True,
+        attention_dropout=0.0,
+        causal=False,
+        device=None,
+        dtype=None,
+        **kwargs,
+    ) -> None:
+        from einops import rearrange
+
+        assert batch_first
+        factory_kwargs = {"device": device, "dtype": dtype}
+        super().__init__()
+        self.embed_dim = embed_dim
+        self.num_heads = num_heads
+        self.causal = causal
+
+        assert (
+            self.embed_dim % num_heads == 0
+        ), "self.kdim must be divisible by num_heads"
+        self.head_dim = self.embed_dim // num_heads
+        assert self.head_dim in [16, 32, 64], "Only support head_dim == 16, 32, or 64"
+
+        self.attention_dropout = attention_dropout
+        self.rearrange = rearrange
+
+    def forward(self, qkv, attn_mask=None, key_padding_mask=None, need_weights=False):
+        qkv = self.rearrange(
+            qkv, "b (three h d) s -> b s three h d", three=3, h=self.num_heads
+        )
+        query, key, value = qkv.chunk(3, 2)
+        query, key, value = query.squeeze(2), key.squeeze(2), value.squeeze(2)
+        # print(query.shape)
+        with th.backends.cuda.sdp_kernel(
+            enable_flash=True, enable_math=False, enable_mem_efficient=False
+            ) and th.cuda.amp.autocast():
+            # th.cuda.synchronize() # questionable call to sync, Don't want to force all models to schedule this
+            out = F.scaled_dot_product_attention(query, key, value, dropout_p=self.attention_dropout, attn_mask=attn_mask, is_causal=self.causal)
+            # print("out shape:", out.shape)
+        return self.rearrange(out, "b s h d -> b (h d) s")
 
 
 class UNetModel(nn.Module):
@@ -775,12 +825,16 @@ class UNetModel(nn.Module):
             emb = emb + self.label_emb(y)
 
         h = x.type(self.dtype)
+        # print(h.shape)
         for module in self.input_blocks:
             h = module(h, emb)
+            # print(h.shape)
             hs.append(h)
         h = self.middle_block(h, emb)
+        # print("middle block", h.shape)
         for module in self.output_blocks:
             h = th.cat([h, hs.pop()], dim=1)
             h = module(h, emb)
+            # print(h.shape)
         h = h.type(x.dtype)
         return self.out(h)
